@@ -1,0 +1,101 @@
+---
+terminals:
+
+  - name: raduzhny
+    oil: 6000
+    max_oil: null
+    unloading: null
+    production: 150
+    loading: 200
+    ways: 0
+    max_ways: 1
+
+  - name: zvezda
+    oil: 5000
+    max_oil: null
+    unloading: null
+    production: 50
+    loading: 250
+    ways: 0
+    max_ways: 1
+
+  - name: polarny
+    oil: 4000
+    max_oil: 15000
+    unloading: 200
+    production: 0
+    loading: 300
+    ways: 0
+    max_ways: 3
+
+trains:
+
+  - name: raduzhny_1_heavy
+    oil: 0
+    max_oil: 6000
+    dist: 0
+    speed: 35
+    route: raduzhny_polarny
+
+
+  - name: raduzhny_2_heavy
+    oil: 0
+    max_oil: 6000
+    dist: 0
+    speed: 35
+    route: raduzhny_polarny
+
+  - name: raduzhny_1_light
+    oil: 4000
+    max_oil: 4000
+    dist: 1240
+    speed: 40
+    route: raduzhny_polarny
+
+  - name: raduzhny_2_light
+    oil: 0
+    max_oil: 4000
+    dist: 2480
+    speed: 40
+    route: raduzhny_polarny
+
+  - name: raduzhny_3_light
+    oil: 4000
+    max_oil: 4000
+    dist: 2480
+    speed: 40
+    route: raduzhny_polarny
+
+  - name: zvezda_1
+    oil: 0
+    max_oil: 5000
+    dist: 0
+    speed: 45
+    route: zvezda_polarny
+
+  - name: zvezda_2
+    oil: 0
+    max_oil: 5000
+    dist: 0
+    speed: 45
+    route: zvezda_polarny
+
+  #- name: polarny_1
+    #oil: 0
+    #max_oil: 10000
+    #dist: null
+    #speed: null
+    #route: null
+
+routes:
+
+  - name: raduzhny_polarny
+    dist: 2500
+    load_point: raduzhny
+    unload_point: polarny
+
+  - name: zvezda_polarny
+    dist: 4000
+    load_point: zvezda
+    unload_point: polarny
+...
