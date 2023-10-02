@@ -1,5 +1,6 @@
 from typing import Dict
 
+
 class Route:
     def __init__(
             self,

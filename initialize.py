@@ -6,7 +6,7 @@ from route import Route
 from train import Train
 from terminal import Terminal
 
-with open('input.yaml') as f:
+with open('trains_and_oil/input.yaml') as f: # убрать trains_and_oil/
     lst = yaml.safe_load(f)
 
 start_date = datetime(2021, 11, 1, 0, 0, 0)

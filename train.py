@@ -10,14 +10,15 @@ class Train:
             train: Dict,
             routes: List[Route]
             ) -> None:
-        self.name: str = train['name']
-        self.oil: int = train['oil']
-        self.max_oil: int = train['max_oil']
-        self.dist: int = train['dist']
-        self.speed: int = train['speed']
-        self.route: Route = self.get_route(train['route'], routes)
+        self.name: str = train.get('name')
+        self.oil: int = train.get('oil')
+        self.max_oil: int = train.get('max_oil')
+        self.dist: int = train.get('dist')
+        self.speed: int = train.get('speed')
+        self.route: Route = self.get_route(train.get('route'), routes)
         self.status: str = ''
         self.destination: str = ''
+        self.type: str = train.get('type')
 
     def get_route(self, train_route, routes):
         for route in routes:
@@ -38,15 +39,18 @@ class Train:
             self,
             terminal: Terminal
             ):
-        if len(terminal.ways) < terminal.max_ways and (
-            self not in terminal.ways and
+        if (
+            None in terminal.ways.values() and
             self.status != 'unloading' and
             self.status != 'move'
         ):
-            terminal.ways.append(self)
+            for key, value in terminal.ways.items():
+                if value is None:
+                    terminal.ways[key] = self
+                    break
             self.status = 'loading'
             self.dist = 0
-        if self in terminal.ways:
+        if self in terminal.ways.values():
             if terminal.oil - terminal.loading < 0 and (
                 self.status == 'loading'
             ):
@@ -58,7 +62,10 @@ class Train:
                 self.oil += terminal.loading
             else:
                 if self.oil + terminal.loading >= self.max_oil:
-                    terminal.ways.remove(self)
+                    for key, value in terminal.ways.items():
+                        if value == self:
+                            terminal.ways[key] = None
+                            break
                     self.status = 'move'
                     return self
         else:
@@ -69,19 +76,58 @@ class Train:
             terminal: Terminal
             ):
         if self.status != 'move' and self.status != 'loading':
-            if len(terminal.ways) < terminal.max_ways and (
-                self not in terminal.ways
-            ):
-                terminal.ways.append(self)
+            if self not in terminal.ways.values():
+                for key, value in terminal.ways.items():
+                    if value is None:
+                        terminal.ways[key] = self
+                        break
                 self.status = 'unloading'
 
-        if self in terminal.ways:
+        if self in terminal.ways.values():
             if self.oil - terminal.unloading >= 0:
                 terminal.oil += terminal.unloading
                 self.oil -= terminal.unloading
                 return None
             else:
-                terminal.ways.remove(self)
+                for key, value in terminal.ways.items():
+                    if value == self:
+                        terminal.ways[key] = None
+                        break
                 self.status = 'move'
                 self.dist = 0
                 return self
+    
+    def oil_export(
+            self,
+            terminal: Terminal
+            ):
+        if (
+            None in terminal.ways.values() and
+            self not in terminal.ways.values()
+        ):
+            for key, value in terminal.ways.items():
+                if value is None:
+                    terminal.ways[key] = self
+                    break
+            self.status = 'loading'
+        if self in terminal.ways.values():
+            if terminal.oil - terminal.loading < 0 and (
+                self.status == 'loading'
+            ):
+                pass
+            if self.oil + terminal.loading <= self.max_oil and (
+                terminal.oil - terminal.loading >= 0
+            ):
+                terminal.oil -= terminal.loading
+                self.oil += terminal.loading
+            else:
+                if self.oil + terminal.loading >= self.max_oil:
+                    for key, value in terminal.ways.items():
+                        if value == self:
+                            terminal.ways[key] = None
+                            break
+                    self.status = None
+                    self.oil = 0
+                    return self
+        else:
+            return self

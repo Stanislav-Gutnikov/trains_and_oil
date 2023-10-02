@@ -1,15 +1,20 @@
 import psycopg2
 from psycopg2.errors import Error
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
 
 
 def db(sql: str):
     try:
         connect = psycopg2.connect(
-            database='postgres',
-            user='postgres',
-            password='postgres',
-            host='127.0.0.1',
-            port='5432'
+            database=os.getenv('DB_NAME'),
+            user=os.getenv('USER'),
+            password=os.getenv('PASSWORD'),
+            host=os.getenv('HOST'),
+            port=os.getenv('PORT')
             )
         cursor = connect.cursor()
         # connect.autocommit = True
@@ -20,16 +25,12 @@ def db(sql: str):
         print("Ошибка при работе с PostgreSQL", error)
 
 
-sql_1 = '''CREATE TABLE polarny
+sql_1 = '''CREATE TABLE zvezda
 (date timestamp,
 oil int,
 production int,
 way_1_train varchar,
-way_1_unloading int,
-way_2_train varchar,
-way_2_unloading int,
-way_3_train varchar,
-way_3_unloading int)'''
+way_1_unloading int)'''
 
 
 # db(sql_1)

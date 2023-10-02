@@ -3,12 +3,12 @@ terminals:
 
   - name: raduzhny
     oil: 6000
-    max_oil: null
-    unloading: null
+    #max_oil: null
+    #unloading: null
     production: 150
     loading: 200
-    ways: 0
     max_ways: 1
+    type: production
 
   - name: zvezda
     oil: 5000
@@ -16,8 +16,8 @@ terminals:
     unloading: null
     production: 50
     loading: 250
-    ways: 0
     max_ways: 1
+    type: production
 
   - name: polarny
     oil: 4000
@@ -25,8 +25,8 @@ terminals:
     unloading: 200
     production: 0
     loading: 300
-    ways: 0
     max_ways: 3
+    type: transshipment_point
 
 trains:
 
@@ -36,7 +36,7 @@ trains:
     dist: 0
     speed: 35
     route: raduzhny_polarny
-
+    type: transport
 
   - name: raduzhny_2_heavy
     oil: 0
@@ -44,6 +44,7 @@ trains:
     dist: 0
     speed: 35
     route: raduzhny_polarny
+    type: transport
 
   - name: raduzhny_1_light
     oil: 4000
@@ -51,6 +52,7 @@ trains:
     dist: 1240
     speed: 40
     route: raduzhny_polarny
+    type: transport
 
   - name: raduzhny_2_light
     oil: 0
@@ -58,6 +60,7 @@ trains:
     dist: 2480
     speed: 40
     route: raduzhny_polarny
+    type: transport
 
   - name: raduzhny_3_light
     oil: 4000
@@ -65,6 +68,7 @@ trains:
     dist: 2480
     speed: 40
     route: raduzhny_polarny
+    type: transport
 
   - name: zvezda_1
     oil: 0
@@ -72,6 +76,7 @@ trains:
     dist: 0
     speed: 45
     route: zvezda_polarny
+    type: transport
 
   - name: zvezda_2
     oil: 0
@@ -79,13 +84,12 @@ trains:
     dist: 0
     speed: 45
     route: zvezda_polarny
+    type: transport
 
-  #- name: polarny_1
-    #oil: 0
-    #max_oil: 10000
-    #dist: null
-    #speed: null
-    #route: null
+  - name: polarny_1
+    oil: 0
+    max_oil: 10000
+    type: export
 
 routes:
 
