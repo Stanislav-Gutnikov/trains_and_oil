@@ -1,7 +1,7 @@
+import os
 import psycopg2
 from psycopg2.errors import Error
 from dotenv import load_dotenv
-import os
 
 
 load_dotenv()
