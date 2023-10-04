@@ -2,11 +2,11 @@ import yaml
 from datetime import datetime
 from typing import List
 
-from core.route import Route
-from core.train import Train
-from core.terminal import Terminal
+from app.core.route import Route
+from app.core.train import Train
+from app.core.terminal import Terminal
 
-with open('app/input.yaml') as f:
+with open('app/input/input.yaml') as f:
     lst = yaml.safe_load(f)
 
 start_date = datetime(2021, 11, 1, 0, 0, 0)

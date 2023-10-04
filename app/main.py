@@ -1,17 +1,26 @@
 from dateutil import rrule
+from fastapi import FastAPI
 
-from db.crud import post_to_db
-from modules.initialize import (
+from app.db.crud import post_to_db
+from app.modules.initialize import (
     start_date,
     end_date,
     trains,
     terminals
 )
-from modules.simulation import (
+from app.modules.simulation import (
     simulate_terminal,
     simulate_export,
     simulate_train
 )
+
+
+app = FastAPI()
+
+
+@app.get('/')
+def read_root():
+    return {'Hello': 'FastAPI'}
 
 
 def main_func():

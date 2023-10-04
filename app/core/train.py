@@ -1,7 +1,7 @@
 from typing import Dict, List
 
-from route import Route
-from terminal import Terminal
+from app.core.route import Route
+from app.core.terminal import Terminal
 
 
 class Train:

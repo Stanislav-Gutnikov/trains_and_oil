@@ -1,7 +1,6 @@
-from core.terminal import Terminal
-from core.train import Train
-
-from initialize import terminals
+from app.core.terminal import Terminal
+from app.core.train import Train
+from app.modules.initialize import terminals
 
 
 polarny = terminals[2]

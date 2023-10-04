@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from db import db
 from app.core.terminal import Terminal
-from core.train import Train
+from app.core.train import Train
+from app.db.db import db
 
 
 def get_train_name(train: Train):
@@ -74,3 +74,4 @@ def post_to_db(
     else:
         sql = crud_transhhipment_point(terminal, start_date)
     db(sql)
+    return
