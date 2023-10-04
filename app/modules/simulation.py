@@ -1,5 +1,5 @@
-from terminal import Terminal
-from train import Train
+from core.terminal import Terminal
+from core.train import Train
 
 from initialize import terminals
 

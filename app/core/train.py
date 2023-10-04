@@ -96,7 +96,7 @@ class Train:
                 self.status = 'move'
                 self.dist = 0
                 return self
-    
+
     def oil_export(
             self,
             terminal: Terminal

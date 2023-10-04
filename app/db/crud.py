@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from db import db
-from terminal import Terminal
-from train import Train
+from app.core.terminal import Terminal
+from core.train import Train
 
 
 def get_train_name(train: Train):

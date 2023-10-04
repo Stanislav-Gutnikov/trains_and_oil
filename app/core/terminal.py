@@ -22,4 +22,3 @@ class Terminal:
     def oil_production(self):
         self.oil += self.production
         return self.oil
-

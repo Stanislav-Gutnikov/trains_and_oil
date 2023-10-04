@@ -1,13 +1,13 @@
 from dateutil import rrule
 
-from crud import post_to_db
-from initialize import (
+from db.crud import post_to_db
+from modules.initialize import (
     start_date,
     end_date,
     trains,
     terminals
 )
-from simulation import (
+from modules.simulation import (
     simulate_terminal,
     simulate_export,
     simulate_train
