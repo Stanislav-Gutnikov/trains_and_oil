@@ -1,7 +1,7 @@
 from dateutil import rrule
 from fastapi import FastAPI
 
-from app.db.crud import post_to_db
+from app.db.crud import post
 from app.modules.initialize import (
     start_date,
     end_date,
@@ -37,7 +37,8 @@ def main_func():
             else:
                 simulate_export(train)
         for terminal in terminals:
-            post_to_db(terminal, single_date)
+            post(terminal, single_date) # ф-ция db каждый раз открывает и закрывает курсор?, медленно. с сессией то же самое, но через сессию намного быстрее
+        
         print(single_date)
 
 
