@@ -1,8 +1,8 @@
-"""First migration
+"""empty message
 
-Revision ID: 595f5c462c7f
+Revision ID: 1ac7f7177ff1
 Revises: 
-Create Date: 2023-10-05 12:15:53.095374
+Create Date: 2023-10-15 18:24:19.226406
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '595f5c462c7f'
+revision = '1ac7f7177ff1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,7 @@ def upgrade():
     sa.Column('train_2_unloading', sa.Integer(), nullable=True),
     sa.Column('train_name_3', sa.String(length=100), nullable=True),
     sa.Column('train_3_unloading', sa.Integer(), nullable=True),
+    sa.Column('calc_id', sa.Integer(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -35,6 +36,7 @@ def upgrade():
     sa.Column('oil', sa.Integer(), nullable=True),
     sa.Column('train_name', sa.String(length=100), nullable=True),
     sa.Column('train_unloading', sa.Integer(), nullable=True),
+    sa.Column('calc_id', sa.Integer(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -43,6 +45,7 @@ def upgrade():
     sa.Column('oil', sa.Integer(), nullable=True),
     sa.Column('train_name', sa.String(length=100), nullable=True),
     sa.Column('train_unloading', sa.Integer(), nullable=True),
+    sa.Column('calc_id', sa.Integer(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )

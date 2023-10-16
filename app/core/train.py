@@ -19,7 +19,6 @@ class Train:
         self.status: str = ''
         self.destination: str = ''
         self.type: str = train.get('type')
-        '''Добавил ветвление т.к. заметил что raduzhny_1_light оказывается без статуса и поэтому встает на разгрузку'''
         if self.type != 'export':
             if self.dist + self.speed < self.route.dist:
                 self.status = 'move'

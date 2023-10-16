@@ -1,7 +1,7 @@
 from dateutil import rrule
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 
-from app.db.crud import post
+from app.db.crud import post_to_db
 from app.modules.initialize import (
     start_date,
     end_date,
@@ -14,16 +14,26 @@ from app.modules.simulation import (
     simulate_train
 )
 
-
-app = FastAPI()
-
-
-@app.get('/')
-def read_root():
-    return {'Hello': 'FastAPI'}
+'''Если роутер кладу в api/endpoints то оттуда мне нужно вызвать main_func -> Ошибка импорта Error loading ASGI app. Could not import module "app.main".
+   Можно main_func переложить в modules?'''
+router = APIRouter(
+    prefix='/model'
+)
 
 
-def main_func():
+@router.post('/')
+def create_calc(
+    calc_id: int
+):
+    main_func(calc_id)
+    return 'Рассчет добавлен'
+
+
+app = FastAPI(title='Симуляция логистической системы')
+app.include_router(router)
+
+
+def main_func(calc_id: int):
     for single_date in rrule.rrule(
         rrule.HOURLY,
         dtstart=start_date,
@@ -37,10 +47,9 @@ def main_func():
             else:
                 simulate_export(train)
         for terminal in terminals:
-            post(terminal, single_date) # ф-ция db каждый раз открывает и закрывает курсор?, медленно. с сессией то же самое, но через сессию намного быстрее
-        
+            post_to_db(terminal, single_date, calc_id)
         print(single_date)
 
 
-if __name__ == '__main__':
-    main_func()
+# if __name__ == '__main__':
+    # main_func()

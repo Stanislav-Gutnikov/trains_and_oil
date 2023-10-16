@@ -1,16 +1,14 @@
 from datetime import datetime
+from sqlalchemy import select
+from fastapi import HTTPException
+from http import HTTPStatus
 
 from app.core.terminal import Terminal
 from app.core.train import Train
-from app.db.db import SessionLocal, db
+from app.db.db import SessionLocal
 from app.db.models.polarny import Polarny
 from app.db.models.raduzhny import Raduzhny
 from app.db.models.zvezda import Zvezda
-
-
-'''у новых ф-ций непонятные названия.
-   Старые ф-ции не нужны
-   Исправлю. + по pep8 сделать'''
 
 
 def get_train_name(train: Train):
@@ -20,73 +18,11 @@ def get_train_name(train: Train):
     return train_name
 
 
-def crud_transhhipment_point(
-        terminal: Terminal,
-        start_date: datetime
-        ):
-    train_name_1 = get_train_name(terminal.ways.get(1))
-    train_name_2 = get_train_name(terminal.ways.get(2))
-    train_name_3 = get_train_name(terminal.ways.get(3))
-    sql = f'''INSERT INTO {terminal.name} (
-        datetime,
-        oil,
-        train_1_name,
-        train_1_unloading,
-        train_2_name,
-        train_2_unloading,
-        train_3_name,
-        train_3_unloading)
-        VALUES (
-            '{start_date}',
-            {terminal.oil},
-            {terminal.production},
-            '{train_name_1}',
-            {terminal.unloading},
-            '{train_name_2}',
-            {terminal.unloading},
-            '{train_name_3}',
-            {terminal.unloading}
-            );'''
-    return sql
-
-
-def crud_production_point(
-        terminal: Terminal,
-        start_date: datetime
-        ):
-    if len(terminal.ways) != 0:
-        train_name = get_train_name(terminal.ways.get(1))
-    sql = f'''INSERT INTO {terminal.name} (
-        datetime,
-        oil,
-        train_name,
-        train_unloading)
-        VALUES (
-            '{start_date}',
-            {terminal.oil},
-            {terminal.production},
-            '{train_name}',
-            {terminal.loading}
-            );'''
-    return sql
-
-
-def post_to_db(
-        terminal: Terminal,
-        start_date: datetime
-        ):
-    if terminal.type != 'transshipment_point':
-        sql = crud_production_point(terminal, start_date)
-    else:
-        sql = crud_transhhipment_point(terminal, start_date)
-    db(sql)
-    return
-
-
-def crud_tp(
-        terminal: Terminal,
-        start_date: datetime  
-    ):
+def crud_transshipment_point(
+    terminal: Terminal,
+    start_date: datetime,
+    calc_id: int
+):
     new_obj = Polarny(
         datetime=start_date,
         oil=terminal.oil,
@@ -96,31 +32,46 @@ def crud_tp(
         train_2_unloading=terminal.unloading,
         train_name_3=get_train_name(terminal.ways.get(3)),
         train_3_unloading=terminal.unloading,
+        calc_id=calc_id
     )
     with SessionLocal() as session:
-        session.add(new_obj)
+        calculation = session.execute(
+            select(Polarny).where(
+                Polarny.calc_id == calc_id,
+                Polarny.datetime == start_date
+            )
+        )
+        if calculation is None:
+            session.add(new_obj)
+        else:
+            raise HTTPException(
+                status_code=HTTPStatus.BAD_REQUEST,
+                detail='Рассчет с таким id уже есть'
+            )
         session.commit()
     return
 
-'''Я тут заношу данные по именам терминалов. Если не понять имя я не смогу понять в какую таблицу занести данные. 
-   Как избежать?'''
-def crud_p(
-        terminal: Terminal,
-        start_date: datetime  
-    ):
+
+def crud_production_point(
+    terminal: Terminal,
+    start_date: datetime,
+    calc_id: int
+):
     if terminal.name == 'raduzhny':
         new_obj = Raduzhny(
             datetime=start_date,
             oil=terminal.oil,
             train_name=get_train_name(terminal.ways.get(1)),
-            train_unloading=terminal.unloading
+            train_unloading=terminal.unloading,
+            calc_id=calc_id
         )
     else:
         new_obj = Zvezda(
             datetime=start_date,
             oil=terminal.oil,
             train_name=get_train_name(terminal.ways.get(1)),
-            train_unloading=terminal.unloading
+            train_unloading=terminal.unloading,
+            calc_id=calc_id
         )
     with SessionLocal() as session:
         session.add(new_obj)
@@ -128,14 +79,13 @@ def crud_p(
     return
 
 
-
-def post(
-        terminal: Terminal,
-        start_date: datetime  
-    ):
+def post_to_db(
+    terminal: Terminal,
+    start_date: datetime,
+    calc_id: int
+):
     if terminal.type != 'transshipment_point':
-        crud_p(terminal, start_date)
+        crud_production_point(terminal, start_date, calc_id)
     else:
-        crud_tp(terminal, start_date)
+        crud_transshipment_point(terminal, start_date, calc_id)
     return
-

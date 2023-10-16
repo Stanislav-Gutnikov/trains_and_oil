@@ -12,3 +12,5 @@ class Polarny(Base):
     train_2_unloading = Column(Integer)
     train_name_3 = Column(String(100), default='None')
     train_3_unloading = Column(Integer)
+    calc_id = Column(Integer)
+
