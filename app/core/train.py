@@ -5,6 +5,7 @@ from app.core.terminal import Terminal
 
 
 class Train:
+    
     def __init__(
             self,
             train: Dict,
