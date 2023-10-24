@@ -2,46 +2,81 @@ from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 import openpyxl
+import os
+from dotenv import load_dotenv
 
 from app.core.terminal import Terminal
 from app.core.train import Train
-from app.db.db import SessionLocal, Base
+from app.db.db import Base
 from app.db.models.raduzhny import Raduzhny
 from app.db.models.zvezda import Zvezda
 from app.db.models.polarny import Polarny
 
 
+load_dotenv()
+
+
 class CRUD:
 
     def __init__(self):
-        self.model_list = [Polarny, Raduzhny, Zvezda]
+        self.model_list = [Raduzhny, Zvezda, Polarny]
+
+    def get_obj_info_pp(self, db_object, column_index: int):
+        info_dict = {
+            1: str(db_object.datetime),
+            2: db_object.oil,
+            3: db_object.train_name,
+            4: db_object.train_unloading,
+            5: db_object.calc_id
+        }
+        return info_dict.get(column_index)
+
+    def get_obj_info_tp(self, db_object, column_index: int):
+        info_dict = {
+            1: str(db_object.datetime),
+            2: db_object.oil,
+            3: db_object.train_name_1,
+            4: db_object.train_1_unloading,
+            5: db_object.train_name_2,
+            6: db_object.train_2_unloading,
+            7: db_object.train_name_3,
+            8: db_object.train_3_unloading,
+            9: db_object.calc_id
+        }
+        return info_dict.get(column_index)
 
     def get(
             self,
             calc_id: int,
             session: Session
     ):
-        res = []
+        excel_file_path = os.getenv('XLSX_FILE_PATH')
+        f = 0
+        db_table_names = list(Base.metadata.tables.keys())
+        wb = openpyxl.Workbook()
+        for table in db_table_names:
+            print(table)
+            wb.create_sheet(table)
+        wb.remove(wb['Sheet'])
+        wb.save(excel_file_path)
         for model in self.model_list:
-            print(model)
             obj = session.execute(select(model).where(
                 model.calc_id == calc_id
             ))
             obj = obj.scalars().all()
-            wb = openpyxl.Workbook()
-            '''
-            db_table_names = list(Base.metadata.tables.keys())
-            for i in range(len(db_table_names)):
-                wb.create_sheet(db_table_names[i], index=i)'''
-            sheet = wb.active
-            for j in range(1, 5):
+            sheet = wb[db_table_names[f]]
+            print(wb.index(sheet))
+            for j in range(1, 337):
                 for k in range(1, 10):
                     cell = sheet.cell(row=j, column=k)
-                    cell.value = obj[1].oil
-            wb.save('C:\\Dev\\trains_and_oil\\app\\api\\get_db_data.xlsx')
-
-        print(wb.sheetnames)
-        return 
+                    if f <= 1:
+                        cell.value = self.get_obj_info_pp(obj[0], k)
+                    else:
+                        cell.value = self.get_obj_info_tp(obj[0], k)
+                obj.pop(0)
+            f += 1
+            wb.save(excel_file_path)
+        return excel_file_path
 
     def get_train_name(
             self,
