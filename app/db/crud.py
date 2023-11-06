@@ -1,6 +1,8 @@
 from datetime import datetime
-from sqlalchemy import select
+from sqlalchemy import delete
+from sqlalchemy.future import select
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 import openpyxl
 import os
 from dotenv import load_dotenv
@@ -45,7 +47,7 @@ class CRUD:
         }
         return info_dict.get(column_index)
 
-    def get(
+    async def get(
             self,
             calc_id: int,
             session: Session
@@ -55,17 +57,15 @@ class CRUD:
         db_table_names = list(Base.metadata.tables.keys())
         wb = openpyxl.Workbook()
         for table in db_table_names:
-            print(table)
             wb.create_sheet(table)
         wb.remove(wb['Sheet'])
         wb.save(excel_file_path)
         for model in self.model_list:
-            obj = session.execute(select(model).where(
+            obj = await session.execute(select(model).where(
                 model.calc_id == calc_id
             ))
             obj = obj.scalars().all()
             sheet = wb[db_table_names[f]]
-            print(wb.index(sheet))
             for j in range(1, 337):
                 for k in range(1, 10):
                     cell = sheet.cell(row=j, column=k)
@@ -87,12 +87,12 @@ class CRUD:
             train_name = train.name
         return train_name
 
-    def crud_transshipment_point(
+    async def crud_transshipment_point(
             self,
             terminal: Terminal,
             start_date: datetime,
             calc_id: int,
-            session: Session
+            session: AsyncSession
     ):
         new_obj = Polarny(
             datetime=start_date,
@@ -106,10 +106,10 @@ class CRUD:
             calc_id=calc_id
         )
         session.add(new_obj)
-        session.commit()
+        await session.commit()
         return
 
-    def crud_production_point(
+    async def crud_production_point(
             self,
             terminal: Terminal,
             start_date: datetime,
@@ -133,25 +133,25 @@ class CRUD:
                 calc_id=calc_id
             )
         session.add(new_obj)
-        session.commit()
+        await session.commit()
         return
 
-    def post_to_db(
+    async def post_to_db(
         self,
         terminal: Terminal,
         start_date: datetime,
         calc_id: int,
-        session: Session
+        session: AsyncSession
     ):
         if terminal.type != 'transshipment_point':
-            self.crud_production_point(
+            await self.crud_production_point(
                 terminal,
                 start_date,
                 calc_id,
                 session
                 )
         else:
-            self.crud_transshipment_point(
+            await self.crud_transshipment_point(
                 terminal,
                 start_date,
                 calc_id,
@@ -159,41 +159,41 @@ class CRUD:
                 )
         return
 
-    def update_data(
+    async def update_data(
         self,
         terminal: Terminal,
         start_date: datetime,
         calc_id: int,
-        session: Session
+        session: AsyncSession
     ):
         for model in self.model_list:
-            session.query(model).filter(
+            await session.execute(delete(model).where(
                 model.calc_id == calc_id,
                 model.datetime == start_date
-            ).delete()
-        session.commit()
-        self.post_to_db(terminal, start_date, calc_id, session)
+            ))
+        await session.commit()
+        await self.post_to_db(terminal, start_date, calc_id, session)
         return
 
-    def delete_obj(
+    async def delete_obj(
             self,
             calc_id: int,
             session: Session
     ):
         for model in self.model_list:
-            session.query(model).filter(
+            await session.execute(delete(model).where(
                 model.calc_id == calc_id
-            ).delete()
-        session.commit()
+            ))
+        await session.commit()
         return
 
-    def delete_all(
+    async def delete_all(
             self,
-            session: Session
+            session: AsyncSession
             ):
         for model in self.model_list:
-            session.query(model).delete()
-        session.commit()
+            await session.execute(delete(model))
+        await session.commit()
         return
 
 
