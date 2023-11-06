@@ -1,5 +1,5 @@
 from dateutil import rrule
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.crud import crud
 from app.modules.initialize import (
     start_date,
@@ -14,10 +14,10 @@ from app.modules.simulation import (
 )
 
 
-def main_func(
+async def main_func(
         calc_id: int,
         recalc: bool,
-        session: Session
+        session: AsyncSession
         ):
     for single_date in rrule.rrule(
         rrule.HOURLY,
@@ -33,13 +33,13 @@ def main_func(
                 simulate_export(train)
         for terminal in terminals:
             if recalc is False or recalc is None:
-                crud.post_to_db(
+                await crud.post_to_db(
                     terminal,
                     single_date,
                     calc_id,
                     session)
             else:
-                crud.update_data(
+                await crud.update_data(
                     terminal,
                     single_date,
                     calc_id,
