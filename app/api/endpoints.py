@@ -5,6 +5,10 @@ from sqlalchemy.orm import Session
 from app.modules.main_sim import main_func
 from app.db.db import get_session
 from app.db.crud import crud
+from app.api.validators import (
+    is_calc_id_in_db,
+    is_same_calc
+)
 
 
 router = APIRouter(
@@ -17,6 +21,7 @@ def get_excel(
     calc_id: int,
     session: Session = Depends(get_session)
 ):
+    is_calc_id_in_db(calc_id, session)
     excel_file_path = crud.get(calc_id, session)
     headers = {'Content-Disposition': 'attachment; filename="get_db_data.xls"'}
     return FileResponse(
@@ -32,6 +37,10 @@ def create_calc(
     recalc: bool,
     session: Session = Depends(get_session)
 ):
+    if recalc is True:
+        is_calc_id_in_db(calc_id, session)
+    else:
+        is_same_calc(calc_id, session)
     main_func(calc_id, recalc, session)
     return 'Рассчет добавлен'
 
@@ -47,5 +56,6 @@ def delete_object(
     calc_id: int,
     session: Session = Depends(get_session)
 ):
+    is_calc_id_in_db(calc_id, session)
     crud.delete_obj(calc_id, session)
     return 'Данные по заданному id очищены'
