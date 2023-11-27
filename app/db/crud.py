@@ -50,7 +50,7 @@ class CRUD:
     async def get(
             self,
             calc_id: int,
-            session: Session
+            session: AsyncSession
     ):
         excel_file_path = os.getenv('XLSX_FILE_PATH')
         f = 0
