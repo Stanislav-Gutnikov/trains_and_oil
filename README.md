@@ -1,4 +1,4 @@
-# trains_and_oil
+# trains_and_oil (async)
 API - Симуляция логистической системы.
 
 ### Описание ###
