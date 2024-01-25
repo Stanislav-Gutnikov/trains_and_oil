@@ -1,17 +1,20 @@
 from dateutil import rrule
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.crud import crud
-from app.modules.initialize import (
+from test.db.crud import crud
+from test.modules.initialize import (
     start_date,
     end_date,
     trains,
     terminals
 )
-from app.modules.simulation import (
+from test.modules.simulation import (
     simulate_terminal,
     simulate_export,
-    simulate_train
+    simulate_train,
+    new_simulate_train
 )
+
+
 
 
 async def main_func(
@@ -28,9 +31,15 @@ async def main_func(
             simulate_terminal(terminal)
         for train in trains:
             if train.type == 'transport':
-                simulate_train(train)
+                new_simulate_train(train)
             else:
                 simulate_export(train)
+            await crud.post_train_to_db(
+                session,
+                train,
+                start_date,
+                calc_id
+            )
         for terminal in terminals:
             if recalc is False or recalc is None:
                 await crud.post_to_db(
@@ -46,5 +55,4 @@ async def main_func(
                     session
                     )
         print(single_date)
-    for train in trains:
-        print(train.name, train.dist, train.oil, train.status)
+        

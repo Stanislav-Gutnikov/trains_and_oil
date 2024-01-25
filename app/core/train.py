@@ -5,7 +5,6 @@ from app.core.terminal import Terminal
 
 
 class Train:
-    
     def __init__(
             self,
             train: Dict,
@@ -53,7 +52,7 @@ class Train:
                     terminal.ways[key] = self
                     break
             self.status = 'loading'
-            self.dist = 0
+
         if self in terminal.ways.values():
             if terminal.oil - terminal.loading < 0 and (
                 self.status == 'loading'
@@ -71,6 +70,7 @@ class Train:
                             terminal.ways[key] = None
                             break
                     self.status = 'move'
+                    self.dist = 0
                     return self
         else:
             return self

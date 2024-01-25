@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 
 import os
 
-from app.db.base import Base
+#from app.db.base import Base
+from test.db.base import Base
 
 
 load_dotenv('.env')
@@ -19,8 +20,8 @@ load_dotenv('.env')
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option('sqlalchemy.url', os.environ['DATABASE_URL'])
-
+#config.set_main_option('sqlalchemy.url', os.environ['DATABASE_URL'])
+config.set_main_option('sqlalchemy.url', os.environ['TEST_DATABASE_URL'])
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:

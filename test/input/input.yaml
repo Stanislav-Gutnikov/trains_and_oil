@@ -1,0 +1,124 @@
+---
+terminals:
+
+  - name: raduzhny
+    oil: 14950
+    production: 150
+    loading: 200
+    max_ways: 1 #raduzhny_2_light
+    type: production
+
+  - name: zvezda
+    oil: 3050
+    max_oil: null
+    unloading: null
+    production: 50
+    loading: 250
+    max_ways: 1
+    type: production
+
+  - name: polarny
+    oil: 500
+    max_oil: 15000
+    unloading: 200
+    production: 0
+    loading: 300
+    max_ways: 3
+    type: transshipment_point
+
+trains:
+
+  - name: raduzhny_1_heavy
+    oil: 6000
+    max_oil: 6000
+    dist: 1960
+    speed: 35
+    route: raduzhny_polarny
+    new_route: raduzhny_polarny_zvezda
+    type: transport
+
+  - name: raduzhny_2_heavy
+    oil: 6000
+    max_oil: 6000
+    dist: 910
+    speed: 35
+    route: raduzhny_polarny
+    new_route: raduzhny_polarny_zvezda
+    type: transport
+
+  - name: raduzhny_1_light
+    oil: 4000
+    max_oil: 4000
+    dist: 240
+    speed: 40
+    route: raduzhny_polarny
+    new_route: raduzhny_polarny_zvezda
+    type: transport
+
+  - name: raduzhny_2_light
+    oil: 1200
+    max_oil: 4000
+    dist: 2480
+    speed: 40
+    route: raduzhny_polarny
+    new_route: raduzhny_polarny_zvezda
+    type: transport
+
+  #- name: raduzhny_3_light
+  #  oil: 0
+  #  max_oil: 4000
+  #  dist: 2480
+  #  speed: 40
+  #  route: raduzhny_polarny
+  #  new_route: raduzhny_polarny_zvezda
+  #  type: transport
+
+  - name: zvezda_1
+    oil: 5000
+    max_oil: 5000
+    dist: 1350
+    speed: 45
+    route: zvezda_polarny
+    new_route: zvezda_polarny_raduzhny
+    type: transport
+
+  - name: zvezda_2
+    oil: 5000
+    max_oil: 5000
+    dist: 225
+    speed: 45
+    route: zvezda_polarny
+    new_route: zvezda_polarny_raduzhny
+    type: transport
+
+  - name: polarny_1
+    oil: 0
+    max_oil: 10000
+    type: export
+
+routes:
+
+  - name: raduzhny_polarny
+    dist: 2500
+    load_point: raduzhny
+    unload_point: polarny
+
+  - name: zvezda_polarny
+    dist: 4000
+    load_point: zvezda
+    unload_point: polarny
+
+  - name: raduzhny_polarny_zvezda
+    dist_1: 2500
+    dist_2: 4000
+    load_point_1: raduzhny
+    load_point_2: zvezda
+    unload_point: polarny
+
+  - name: zvezda_polarny_raduzhny
+    dist_1: 4000
+    dist_2: 2500
+    load_point_1: zvezda
+    load_point_2: raduzhny
+    unload_point: polarny
+...
