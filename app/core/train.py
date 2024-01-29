@@ -8,23 +8,33 @@ class Train:
     def __init__(
             self,
             train: Dict,
-            routes: List[Route]
+            route_list: List[Route]
             ) -> None:
         self.name: str = train.get('name')
         self.oil: int = train.get('oil')
         self.max_oil: int = train.get('max_oil')
         self.dist: int = train.get('dist')
         self.speed: int = train.get('speed')
-        self.route: Route = self.get_route(train.get('route'), routes)
+        self.routes: Dict = train.get('routes')
+        self.route: Route = self.get_route(train.get('route'), route_list)
         self.status: str = ''
         self.destination: str = ''
         self.type: str = train.get('type')
+        self.route_list = route_list
         if self.type != 'export':
             if self.dist + self.speed < self.route.dist:
                 self.status = 'move'
 
-    def get_route(self, train_route, routes):
-        for route in routes:
+    def try_change_route(self, single_date):
+        if single_date >= list(self.routes.keys())[1]:
+            self_route = list(self.routes.values())[0]
+            other_route = list(self.routes.values())[1]
+            if self.route != other_route:
+                self.route = self.get_route(other_route, self.route_list)         
+        return
+
+    def get_route(self, train_route, route_list):
+        for route in route_list:
             if route.name == train_route:
                 return route
 
@@ -77,7 +87,8 @@ class Train:
 
     def oil_unloading(
             self,
-            terminal: Terminal
+            terminal: Terminal,
+            single_date
             ):
         if self.status != 'move' and self.status != 'loading':
             if self not in terminal.ways.values():
@@ -97,6 +108,7 @@ class Train:
                     if value == self:
                         terminal.ways[key] = None
                         break
+                self.try_change_route(single_date)
                 self.status = 'move'
                 self.dist = 0
                 return self

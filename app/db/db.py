@@ -19,7 +19,7 @@ class PreBase:
 
 Base = declarative_base(cls=PreBase)
 
-engine = create_async_engine(os.getenv('DATABASE_URL'))
+engine = create_async_engine(os.getenv('TEST_DATABASE_URL'))
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)
 
 

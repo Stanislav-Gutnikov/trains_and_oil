@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 import os
 
 #from app.db.base import Base
-from test.db.base import Base
+from app.db.base import Base
 
 
 load_dotenv('.env')

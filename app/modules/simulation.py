@@ -15,7 +15,7 @@ def simulate_export(train: Train):
         train.oil_export(polarny)
 
 
-def simulate_train(train: Train):
+def simulate_train(train: Train, single_date):
     train_terminal_name = train.route.load_point
     terminal = None
     for i in terminals:
@@ -23,5 +23,7 @@ def simulate_train(train: Train):
             terminal = i
     if train.oil_loading(terminal):
         if train.move():
-            if train.oil_unloading(polarny):
+            if train.oil_unloading(polarny, single_date):
                 train.move()
+
+

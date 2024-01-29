@@ -28,9 +28,12 @@ async def main_func(
             simulate_terminal(terminal)
         for train in trains:
             if train.type == 'transport':
-                simulate_train(train)
+                #train.try_change_route(single_date)
+                simulate_train(train, single_date)
+                print(single_date, train.name, train.route.name, train.dist, train.oil)
             else:
                 simulate_export(train)
+#'''
         for terminal in terminals:
             if recalc is False or recalc is None:
                 await crud.post_to_db(
@@ -44,7 +47,6 @@ async def main_func(
                     single_date,
                     calc_id,
                     session
-                    )
-        print(single_date)
-    for train in trains:
-        print(train.name, train.dist, train.oil, train.status)
+                    )#'''
+    #for train in trains:
+        #print(train.name, train.dist, train.oil, train.status)

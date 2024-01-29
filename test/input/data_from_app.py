@@ -1,7 +1,0 @@
-train_list = [{'name': 'raduzhny_1_heavy', 'oil': 6000, 'max_oil': 6000, 'dist': 1120, 'speed': 35, 'route': 'raduzhny_polarny', 'new_route': 'raduzhny_polarny_zvezda', 'status': 'move', 'destination': '', 'type': 'transport'},
-{'name': 'raduzhny_2_heavy', 'oil': 6000, 'max_oil': 6000, 'dist': 70, 'speed': 35, 'route': 'raduzhny_polarny', 'new_route': 'raduzhny_polarny_zvezda', 'status': 'move', 'destination': '', 'type': 'transport'},
-{'name': 'raduzhny_1_light', 'oil': 400, 'max_oil': 4000, 'dist': 2480, 'speed': 40, 'route': 'raduzhny_polarny', 'new_route': 'raduzhny_polarny_zvezda', 'status': 'loading', 'destination': '', 'type': 'transport'},
-{'name': 'raduzhny_2_light', 'oil': 0, 'max_oil': 4000, 'dist': 2480, 'speed': 40, 'route': 'raduzhny_polarny', 'new_route': 'raduzhny_polarny_zvezda', 'status': 'move', 'destination': '', 'type': 'transport'},
-{'name': 'raduzhny_3_light', 'oil': 0, 'max_oil': 4000, 'dist': 2480, 'speed': 40, 'route': 'raduzhny_polarny', 'new_route': 'raduzhny_polarny_zvezda', 'status': 'loading', 'destination': '', 'type': 'transport'},
-{'name': 'zvezda_1', 'oil': 5000, 'max_oil': 5000, 'dist': 270, 'speed': 45, 'route': 'zvezda_polarny', 'new_route': 'zvezda_polarny_raduzhny', 'status': 'move', 'destination': '', 'type': 'transport'},
-{'name': 'zvezda_2', 'oil': 250, 'max_oil': 5000, 'dist': 3960, 'speed': 45, 'route': 'zvezda_polarny', 'new_route': 'zvezda_polarny_raduzhny', 'status': 'loading', 'destination': '', 'type': 'transport'}]
