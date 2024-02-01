@@ -7,6 +7,8 @@ import openpyxl
 import os
 from dotenv import load_dotenv
 
+import time
+
 from app.core.terminal import Terminal
 from app.core.train import Train
 from app.db.db import Base
@@ -22,6 +24,9 @@ class CRUD:
 
     def __init__(self):
         self.model_list = [Raduzhny, Zvezda, Polarny]
+        self.polarny = []
+        self.zvezda = []
+        self.raduzhny = []
 
     def get_obj_info_pp(self, db_object, column_index: int):
         info_dict = {
@@ -87,12 +92,11 @@ class CRUD:
             train_name = train.name
         return train_name
 
-    async def crud_transshipment_point(
+    async def make_new_data_transshipment_point(
             self,
             terminal: Terminal,
             start_date: datetime,
-            calc_id: int,
-            session: AsyncSession
+            calc_id: int
     ):
         new_obj = Polarny(
             datetime=start_date,
@@ -105,16 +109,17 @@ class CRUD:
             train_3_unloading=terminal.unloading,
             calc_id=calc_id
         )
-        session.add(new_obj)
-        await session.commit()
-        return
+        self.polarny.append(new_obj)
+        #session.add(new_obj)
+        #await session.commit()
+        
+        return 
 
-    async def crud_production_point(
+    async def make_new_data_production_point(
             self,
             terminal: Terminal,
             start_date: datetime,
-            calc_id: int,
-            session: Session
+            calc_id: int
     ):
         if terminal.name == 'raduzhny':
             new_obj = Raduzhny(
@@ -124,6 +129,7 @@ class CRUD:
                 train_unloading=terminal.unloading,
                 calc_id=calc_id
             )
+            self.raduzhny.append(new_obj)
         else:
             new_obj = Zvezda(
                 datetime=start_date,
@@ -132,47 +138,56 @@ class CRUD:
                 train_unloading=terminal.unloading,
                 calc_id=calc_id
             )
-        session.add(new_obj)
-        await session.commit()
+            self.zvezda.append(new_obj)
         return
 
-    async def post_to_db(
+    async def post_data_to_db(
+        self,
+        session: AsyncSession
+    ):
+        session.add_all(self.polarny)
+        session.add_all(self.raduzhny)
+        session.add_all(self.zvezda)
+        await session.commit()
+        self.polarny = []
+        self.raduzhny = []
+        self.zvezda = []
+        return
+        
+
+    async def make_new_terminals_data(
         self,
         terminal: Terminal,
         start_date: datetime,
         calc_id: int,
+        recalc: bool,
         session: AsyncSession
     ):
         if terminal.type != 'transshipment_point':
-            await self.crud_production_point(
+            await self.make_new_data_production_point(
                 terminal,
                 start_date,
-                calc_id,
-                session
+                calc_id
                 )
         else:
-            await self.crud_transshipment_point(
+            await self.make_new_data_transshipment_point(
                 terminal,
                 start_date,
-                calc_id,
-                session
+                calc_id
                 )
         return
 
     async def update_data(
         self,
-        terminal: Terminal,
-        start_date: datetime,
         calc_id: int,
         session: AsyncSession
     ):
         for model in self.model_list:
             await session.execute(delete(model).where(
-                model.calc_id == calc_id,
-                model.datetime == start_date
+                model.calc_id == calc_id
             ))
-        await session.commit()
-        await self.post_to_db(terminal, start_date, calc_id, session)
+        await self.post_data_to_db(session)
+
         return
 
     async def delete_obj(

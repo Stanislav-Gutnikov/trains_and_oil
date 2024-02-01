@@ -7,6 +7,7 @@ from app.modules.initialize import (
     trains,
     terminals
 )
+
 from app.modules.simulation import (
     simulate_terminal,
     simulate_export,
@@ -28,25 +29,23 @@ async def main_func(
             simulate_terminal(terminal)
         for train in trains:
             if train.type == 'transport':
-                #train.try_change_route(single_date)
                 simulate_train(train, single_date)
-                print(single_date, train.name, train.route.name, train.dist, train.oil)
             else:
                 simulate_export(train)
 #'''
+        
         for terminal in terminals:
-            if recalc is False or recalc is None:
-                await crud.post_to_db(
+            await crud.make_new_terminals_data(
                     terminal,
                     single_date,
                     calc_id,
-                    session)
-            else:
-                await crud.update_data(
-                    terminal,
-                    single_date,
-                    calc_id,
+                    recalc,
                     session
-                    )#'''
-    #for train in trains:
-        #print(train.name, train.dist, train.oil, train.status)
+                    )
+    if recalc:
+        await crud.update_data(calc_id, session)
+    else:
+        await crud.post_data_to_db(session)
+
+    return
+
