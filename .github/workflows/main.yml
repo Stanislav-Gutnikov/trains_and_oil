@@ -55,7 +55,9 @@ jobs:
         passphrase: Wind0654W # Если ваш ssh-ключ защищён фразой-паролем
         script: |
           # Выполняет pull образа с DockerHub
-          sudo docker pull stanislavgutnikov/trains_and_oil:latest
+          #sudo docker pull stanislavgutnikov/trains_and_oil:latest
           #остановка всех контейнеров
+          git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
           sudo docker stop $(sudo docker ps -a -q)
-          sudo docker run --rm -d -p 5000:5000 stanislavgutnikov/trains_and_oil:latest
+          sudo trains_and_oil/docker-compose up
+          #sudo docker run --rm -d -p 5000:5000 stanislavgutnikov/trains_and_oil:latest
