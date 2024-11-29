@@ -48,7 +48,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
