@@ -8,9 +8,9 @@ on:
 # jobs запускаются параллельно, если не указана последовательность
 jobs:
     # Название job вы можете назвать как угодно
-    my_build_job:
-      # Операционная система в виртуальной машине, в которой запускаются процессы
-      runs-on: ubuntu-latest
+  tests:
+    # «Раннер» — создание изолированного окружения с последней версией Ubuntu 
+    runs-on: ubuntu-latest
         # Шаги
         steps:
           # Actions от github: проверяет репозиторий, гит и т.д.
@@ -18,4 +18,4 @@ jobs:
 
           # Пример однолинейного простого скрипта shell
           - name: Run a one-line script
-            run: echo Hello, world!
+            run: echo "Hello, world!"
