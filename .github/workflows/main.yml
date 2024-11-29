@@ -60,5 +60,5 @@ jobs:
           git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
           sudo docker stop $(sudo docker ps -a -q)
           cd trains_and_oil/
-          sudo docker-compose up
-          #sudo docker run --rm -d -p 5000:5000 stanislavgutnikov/trains_and_oil:latest
+          sudo docker-compose up -d
+          sudo docker ps
