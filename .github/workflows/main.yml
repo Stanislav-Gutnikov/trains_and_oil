@@ -58,4 +58,4 @@ jobs:
           sudo docker pull stanislavgutnikov/trains_and_oil:latest
           #остановка всех контейнеров
           sudo docker stop $(sudo docker ps -a -q)
-          sudo docker run --rm -d -p 8000:8000 stanislavgutnikov/trains_and_oil:latest
+          sudo docker run --rm -d -p 8000:80 stanislavgutnikov/trains_and_oil:latest
