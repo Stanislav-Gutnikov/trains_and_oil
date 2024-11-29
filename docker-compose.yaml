@@ -1,0 +1,38 @@
+# версия docker-compose
+version: '3.8'
+
+volumes:
+  db_data:
+# имена и описания контейнеров, которые должны быть развёрнуты
+services:
+  # описание контейнера db
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    #env_file:
+    #  - ./.env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    restart: always
+
+  web:
+    build: .
+    restart: always
+    ports:
+     - "8000:8000"
+    # "зависит от", 
+    links:
+      - db
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db/postgres
+      #DATABASE_HOST: db
+    #command: ["./setup/wait-for-postgres.sh", "localhost:5432", "--", "node", "src"]
+    #depends_on:
+    #  - db
+    #env_file:
+    #  - ./.env
