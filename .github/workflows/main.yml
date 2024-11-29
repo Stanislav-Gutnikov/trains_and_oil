@@ -57,7 +57,8 @@ jobs:
           # Выполняет pull образа с DockerHub
           #sudo docker pull stanislavgutnikov/trains_and_oil:latest
           #остановка всех контейнеров
-          git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
+          #git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
+          GIT_SSH_COMMAND="ssh -v" git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
           ls
           sudo docker stop $(sudo docker ps -a -q)
           cd trains_and_oil
