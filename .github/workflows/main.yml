@@ -46,30 +46,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
     steps:
-    - name: executing remote ssh commands to deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: 84.201.145.6
-        username: gutnikov
-        key: ${{ secrets.DEPLOY_KEY }}
-        passphrase: Wind0654W # Если ваш ssh-ключ защищён фразой-паролем
-          run: |
-            mkdir -p ~/.ssh
-            echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            ssh-keyscan -H 84.201.145.6 >> ~/.ssh/known_hosts
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Clone repository
-      run: |
-        ssh -i ~/.ssh/id_rsa gutnikov@84.201.145.6 "git clone git@github.com:Stanislav-Gutnikov/trains_and_oil.git"
-        #script: |
-          # Выполняет pull образа с DockerHub
-          #sudo docker pull stanislavgutnikov/trains_and_oil:latest
-          #остановка всех контейнеров
-          #ssh -v -T git@github.com
-          #git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
-          #ls
-          #sudo docker stop $(sudo docker ps -a -q)
-          #cd trains_and_oil
-          #sudo docker-compose up -d
-          #sudo docker ps
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 84.201.145.6 >> ~/.ssh/known_hosts
+
+      - name: Copy repository to server
+        run: |
+          scp -r . gutnikov@84.201.145.6:/home/gutnikov/
