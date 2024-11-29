@@ -51,6 +51,7 @@ jobs:
       with:
         host: 84.201.145.6
         username: gutnikov
+        
         key: ${{ secrets.DEPLOY_KEY }}
         passphrase: Wind0654W # Если ваш ssh-ключ защищён фразой-паролем
         script: |
