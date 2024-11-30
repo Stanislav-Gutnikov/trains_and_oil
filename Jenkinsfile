@@ -11,7 +11,7 @@
                    script {
                        // Убедитесь, что Docker и Docker Compose установлены на вашем сервере
                        sh 'docker-compose down' // Останавливаем старые контейнеры
-                       sh 'docker-compose up -d --build' // Собираем и запускаем новые контейнеры
+                       sh 'docker-compose up -d' // Собираем и запускаем новые контейнеры
                    }
                }
            }
