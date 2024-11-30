@@ -21,6 +21,7 @@
                     } else {
                         echo 'No containers to remove.'
                     }
+                    sh 'docker-compose up -d'
                    }
                }
            }
