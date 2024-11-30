@@ -57,7 +57,8 @@ jobs:
           pwd
           git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
           cd trains_and_oil/
-          docker-compose up
+          sudo systemctl stop postgres
+          sudo docker-compose up
 
     #steps:
       
