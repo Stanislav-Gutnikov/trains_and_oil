@@ -9,16 +9,17 @@
            stage('Build and Deploy') {
                steps {
                    script {
-                       // Получаем список всех контейнеров
-                       def containers = sh(script: 'docker ps -aq', returnStdout: true).trim().split(/s+/)
+                       def output = sh(script: 'docker ps -aq', returnStdout: true).trim()
+                    def containers = output ? output.split('\n') : []
+                    
                     // Проверяем, есть ли контейнеры для удаления
-                    if (containers.size() > 0 && containers[0] != '') {
-                           // Удаляем каждый контейнер по отдельности
-                           for (container in containers) {
-                               sh "docker rm -f ${container}"
-                           }
-                       } else {
-                           echo 'No containers to remove.'
+                    if (containers.size() > 0) {
+                        // Удаляем каждый контейнер по отдельности
+                        for (container in containers) {
+                            sh "docker rm -f ${container}"
+                        }
+                    } else {
+                        echo 'No containers to remove.'
                     }
                    }
                }
