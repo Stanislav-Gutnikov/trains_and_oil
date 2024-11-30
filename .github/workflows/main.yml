@@ -61,3 +61,5 @@ jobs:
           ls 
           #cd ..
           scp -r * gutnikov@84.201.171.183:/home/gutnikov/trains_and_oil/
+          cd trains_and_oil/
+          sudo docker-compose up
