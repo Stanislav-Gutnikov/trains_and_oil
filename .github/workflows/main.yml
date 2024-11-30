@@ -58,4 +58,5 @@ jobs:
 
       - name: Copy repository to server
         run: |
-          scp -r trains_and_oil gutnikov@84.201.171.183:/home/gutnikov/
+          ls 
+          scp -r ./ gutnikov@84.201.171.183:/home/gutnikov/
