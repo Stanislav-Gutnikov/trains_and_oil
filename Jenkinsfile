@@ -10,7 +10,7 @@
                steps {
                    script {
                     // Получаем список всех контейнеров
-                    def containers = sh(script: 'docker ps -aq', returnStdout: true).trim().split("\s+")
+                    def containers = sh(script: 'docker ps -aq', returnStdout: true).trim().split("/\s+/")
                     
                     // Проверяем, есть ли контейнеры для удаления
                     if (containers.size() > 0 && containers[0] != '') {
