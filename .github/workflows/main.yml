@@ -55,7 +55,9 @@ jobs:
         #passphrase: Wind0654W # Если ваш ssh-ключ защищён фразой-паролем
         script: |
           pwd
-          #cd ..
           git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
+          cd trains_and_oil/
+          docker-compose up
+
     #steps:
       
