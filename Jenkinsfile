@@ -9,8 +9,20 @@
            stage('Build and Deploy') {
                steps {
                    script {
-                       sh 'docker rm -f $(docker ps -aq)' // Удаляем старые контейнеры
-                       sh 'docker-compose up -d' // Собираем и запускаем новые контейнеры
+                       //sh 'docker rm -f $(docker ps -aq)' // Удаляем старые контейнеры
+                       script {
+                    // Получаем список всех контейнеров
+                            def containers = sh(script: 'docker ps -aq', returnStdout: true).trim()
+                    
+                    // Проверяем, есть ли контейнеры для удаления
+                            if (containers) {
+                        // Удаляем все контейнеры
+                                sh "docker rm -f ${containers}"
+                            } else {
+                                echo 'No containers to remove.'
+                            }
+                       sh 'docker-compose up -d'
+                        } // Собираем и запускаем новые контейнеры
                    }
                }
            }
