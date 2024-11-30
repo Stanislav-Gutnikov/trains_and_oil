@@ -60,6 +60,6 @@ jobs:
         run: |
           ls 
           cd ..
-          scp -r trains_and_oil/ gutnikov@84.201.171.183:/home/gutnikov/
+          scp -r trains_and_oil gutnikov@84.201.171.183:/home/gutnikov/
           cd trains_and_oil/
           sudo docker-compose up
