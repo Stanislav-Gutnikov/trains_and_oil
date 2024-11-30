@@ -52,7 +52,6 @@ jobs:
         host: 84.201.171.183
         username: gutnikov
         key: ${{ secrets.DEPLOY_KEY }}
-        #passphrase: Wind0654W # Если ваш ssh-ключ защищён фразой-паролем
         script: |
           pwd
           git clone --branch docker git@github.com:Stanislav-Gutnikov/trains_and_oil.git
