@@ -15,11 +15,8 @@
                             def containers = sh(script: 'docker ps -aq', returnStdout: true).trim()
                     
                     // Проверяем, есть ли контейнеры для удаления
-                            if (containers) {
-                        // Удаляем все контейнеры
-                                sh "docker rm -f ${containers}"
-                            } else {
-                                echo 'No containers to remove.'
+                            for (container in containers) {
+                                sh "docker rm -f ${container}"
                             }
                        sh 'docker-compose up -d'
                         } // Собираем и запускаем новые контейнеры
