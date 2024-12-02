@@ -8,6 +8,8 @@
            }
            stage('Build and Deploy') {
                steps {
+                   sh 'sudo systemctl stop nginx'
+                   sh 'sudo systemctl stop postgres'
                    script {
                        def output = sh(script: 'docker ps -aq', returnStdout: true).trim()
                     def containers = output ? output.split('\n') : []
