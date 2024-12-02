@@ -8,9 +8,20 @@
            }
            stage('Build and Deploy') {
                steps {
-                   sh 'sudo systemctl stop nginx'
-                   sh 'sudo systemctl stop postgres'
                    script {
+                    def status = sh(script: 'systemctl is-active nginx', returnStatus: true)
+                    if (status == 0) {
+                        sh 'sudo systemctl stop nginx'
+                    } else {
+                        echo 'Nginx is not running. No action needed.'
+                    }
+
+                    def status = sh(script: 'systemctl is-active postgres', returnStatus: true)
+                    if (status == 0) {
+                        sh 'sudo systemctl stop postgres'
+                    } else {
+                        echo 'postgres is not running. No action needed.'
+                    }
                        def output = sh(script: 'docker ps -aq', returnStdout: true).trim()
                     def containers = output ? output.split('\n') : []
                     
