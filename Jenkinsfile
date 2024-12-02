@@ -9,15 +9,15 @@
            stage('Build and Deploy') {
                steps {
                    script {
-                    def status = sh(script: 'systemctl is-active nginx', returnStatus: true)
-                    if (status == 0) {
+                    def status_nginx = sh(script: 'systemctl is-active nginx', returnStatus: true)
+                    if (status_nginx == 0) {
                         sh 'sudo systemctl stop nginx'
                     } else {
                         echo 'Nginx is not running. No action needed.'
                     }
 
-                    def status = sh(script: 'systemctl is-active postgres', returnStatus: true)
-                    if (status == 0) {
+                    def status_postgres = sh(script: 'systemctl is-active postgres', returnStatus: true)
+                    if (status_postgres == 0) {
                         sh 'sudo systemctl stop postgres'
                     } else {
                         echo 'postgres is not running. No action needed.'
